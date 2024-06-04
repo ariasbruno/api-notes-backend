@@ -1,7 +1,5 @@
 const express = require('express')
-const cors = require('cors')
 const app = express()
-app.use(cors())
 
 let notes = [
   {
@@ -21,6 +19,8 @@ let notes = [
   }
 ]
 
+app.use(express.static('dist'))
+
 const requestLogger = (request, response, next) => {
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
@@ -28,6 +28,10 @@ const requestLogger = (request, response, next) => {
   console.log('---')
   next()
 }
+
+const cors = require('cors')
+
+app.use(cors())
 
 app.use(express.json())
 app.use(requestLogger)
@@ -61,9 +65,9 @@ app.post('/api/notes', (request, response) => {
   }
 
   const note = {
-    id: generateId(),
     content: body.content,
     important: body.important || false,
+    id: generateId(),
   }
 
   notes = notes.concat(note)
